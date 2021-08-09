@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>subscribe a channel</title>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <h2>Subscribe a Channel:</h2>
+    <section>
+      <input id="channel" placeholder="channel name" />
+      <button class="sub-btn" onclick="subscribe()">Subscribe</button>
+      <button class="unsub-btn" onclick="unsubscribe()">UnSubscribe</button>
+    </section>
+    <div id="result"></div>
+    <h2>Received Message:</h2>
+    <div id="received"></div>
+    <script>
+      const channelEL = document.getElementById("channel");
+      const resultEL = document.getElementById("result");
+      const receivedEL = document.getElementById("received");
+      function subscribe() {
+        console.log("subscribe button clicked!");
+        const payload = JSON.stringify({
+          type: "SUBSCRIBE",
+          channel: channelEL.value
+        });
+        const ws = new WebSocket("ws://localhost:8080/");
+        ws.onopen = function (event) {
+          ws.send(payload);
+          ws.onmessage = function (event) {
+            const { message } = JSON.parse(event.data);
+            receivedEL.textContent = message;
+          };
+        };
+        channelEL.value = ""; // clear input
+        resultEL.textContent = "subscribe success!";
+        setTimeout(() => {
+          resultEL.textContent = "";
+        }, 5000);
+      }
+      function unsubscribe() {
+        console.log("unsubscribe button clicked!");
+        const payload = JSON.stringify({
+          type: "UNSUBSCRIBE",
+          channel: channelEL.value
+        });
+        const ws = new WebSocket("ws://localhost:8080/");
+        ws.onopen = function (event) {
+          ws.send(payload);
+          ws.close();
+        };
+        channelEL.value = ""; // clear input
+        resultEL.textContent = "unsubscribe success!";
+        setTimeout(() => {
+          resultEL.textContent = "";
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

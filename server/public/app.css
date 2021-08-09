@@ -1,0 +1,23 @@
+.pub-btn {
+  padding: 8px 10px;
+  background-color: red;
+}
+.sub-btn {
+  padding: 8px 10px;
+  background-color: green;
+}
+
+.unsub-btn {
+  padding: 8px 10px;
+  background-color: blue;
+}
+
+#result {
+  color: red;
+  font-size: 22px;
+}
+
+#received {
+  color: black;
+  font-size: 20px;
+}

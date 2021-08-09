@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>publish a msg</title>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <h2>Publish a message:</h2>
+    <section>
+      <input id="channel" placeholder="channel name" />
+      <input id="message" placeholder="message" />
+      <button class="pub-btn" onclick="publish()">Publish</button>
+    </section>
+    <div id="result"></div>
+    <script>
+      const messageEL = document.getElementById("message");
+      const channelEL = document.getElementById("channel");
+      const resultEL = document.getElementById("result");
+      function publish() {
+        console.log("publish button clicked!");
+        const payload = JSON.stringify({
+          type: "PUBLISH",
+          message: messageEL.value,
+          channel: channelEL.value
+        });
+        const ws = new WebSocket("ws://localhost:8080/");
+        // ws.on("open", function open() {
+        //   ws.send(payload);
+        //   ws.close();
+        // });
+        ws.onopen = function (event) {
+          ws.send(payload);
+          ws.close();
+        };
+        messageEL.value = ""; // clear input
+        channelEL.value = ""; // clear input
+        resultEL.textContent = "published success!";
+        setTimeout(() => {
+          resultEL.textContent = "";
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>
