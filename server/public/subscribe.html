@@ -18,6 +18,7 @@
     <h2>Received Message:</h2>
     <div id="received"></div>
     <script>
+      let ws; // keep only one websocket object
       const channelEL = document.getElementById("channel");
       const resultEL = document.getElementById("result");
       const receivedEL = document.getElementById("received");
@@ -27,7 +28,9 @@
           type: "SUBSCRIBE",
           channel: channelEL.value
         });
-        const ws = new WebSocket("ws://localhost:8080/");
+        if (!ws) {
+          ws = new WebSocket("ws://localhost:8080/");
+        }
         ws.onopen = function (event) {
           ws.send(payload);
           ws.onmessage = function (event) {
@@ -47,10 +50,11 @@
           type: "UNSUBSCRIBE",
           channel: channelEL.value
         });
-        const ws = new WebSocket("ws://localhost:8080/");
+        if (!ws) {
+          ws = new WebSocket("ws://localhost:8080/");
+        }
         ws.onopen = function (event) {
           ws.send(payload);
-          ws.close();
         };
         channelEL.value = ""; // clear input
         resultEL.textContent = "unsubscribe success!";
